@@ -1,5 +1,6 @@
 import { args, command, flag, flags, z } from "../../zcli.ts";
 import { path } from "../../deps.ts";
+import { AppExistsError } from "../../errors.ts";
 
 export const init = command("init", {
   use: [`zcli init <name> [flags]`, `zcli init [flags]`].join("\n  "),
@@ -58,10 +59,13 @@ export const init = command("init", {
   }),
 }).run(
   async ({ args, flags }) => {
-    const appName = args[0] || path.basename(flags.cwd);
-    const appDir = args[0] ? `${flags.cwd}/${appName}` : flags.cwd;
+    const cwd = path.isAbsolute(flags.cwd)
+      ? flags.cwd
+      : path.join(Deno.cwd(), flags.cwd);
+    const appName = args[0] || path.basename(cwd);
+    const appDir = args[0] ? `${cwd}/${appName}` : cwd;
 
-    if (appName === path.basename(flags.cwd)) {
+    if (appName === path.basename(cwd)) {
       if (
         !window.confirm(
           `Are you sure you want to create a zCLI application in this directory? (${appName})`,
@@ -75,6 +79,17 @@ export const init = command("init", {
       Deno.statSync(appDir);
     } catch (_err) {
       await Deno.mkdir(appDir, { recursive: true });
+    }
+
+    try {
+      Deno.statSync(`${appDir}/mod.ts`);
+      Deno.statSync(`${appDir}/commands`);
+      throw new AppExistsError(appName);
+    } catch (err) {
+      // Ignore
+      if (!(err instanceof Deno.errors.NotFound)) {
+        throw err;
+      }
     }
 
     await Promise.all([
@@ -93,9 +108,6 @@ export const init = command("init", {
       ),
     );
 
-    // Create the `deps.ts` file.
-    // files.push(Deno.writeTextFile(`${appDir}/deps.ts`, DEPS));
-
     // Create the `mod.ts` file.
     files.push(
       Deno.writeTextFile(
@@ -104,6 +116,14 @@ export const init = command("init", {
           "{{short}}",
           JSON.stringify(flags.short),
         ),
+      ),
+    );
+
+    // Create the `errors.ts` file.
+    files.push(
+      Deno.writeTextFile(
+        `${appDir}/errors.ts`,
+        ERRORS_TS.replaceAll("{{appName}}", appName),
       ),
     );
 
@@ -181,6 +201,7 @@ const DENO_JSONC = JSON.stringify(
 
 const MOD_TS = `import { app, version } from "./zcli.ts";
 import { commands } from "./commands/mod.ts";
+import { AppError } from "./errors.ts";
 
 export const root = app.command("{{appName}}", {
   short: {{short}},
@@ -192,9 +213,30 @@ export const root = app.command("{{appName}}", {
 });
 
 if (import.meta.main) {
-  root.execute();
+  try {
+    await root.execute();
+  } catch (err) {
+    // Catch known errors and exit with the appropriate code.
+    if (err instanceof AppError) {
+      console.error(err.message);
+      Deno.exit(err.code);
+    }
+    
+    throw err;
+  }
 }
 `;
+
+const ERRORS_TS = `
+export class AppError extends Error {
+  readonly code: number = 1;
+
+  constructor({ message, code }: { message: string; code?: number }) {
+    super(message);
+    this.code = code ?? 1;
+  }
+}
+`.trimStart();
 
 const MOD_TEST_TS = `
 import { describe, it } from "https://deno.land/std/testing/bdd.ts";
@@ -280,13 +322,19 @@ deno task docs
 
 ## Credits
 
-ⓩ Created with [zCLI](https://github.com/jaredLunde/zcli-cli)
+🎨 Created with [zCLI](https://github.com/jaredLunde/zcli-cli)
 `;
 
 const GENERATE_DOCS_TS = `
 import { zcliDoc } from "https://deno.land/x/zcli/zcli-doc.ts";
 import { app } from "../zcli.ts";
 import { root } from "../mod.ts";
+
+try {
+  Deno.statSync("docs");
+} catch(_err) {
+  await Deno.mkdir("docs");
+}
 
 await zcliDoc(app, root, {
   output: "docs/{{appName}}.md",

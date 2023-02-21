@@ -1,5 +1,5 @@
-import { textEncoder } from "https://deno.land/x/zcli@1.0.1/lib/text-encoder.ts";
-import { init } from "https://deno.land/x/zcli@1.0.1/mod.ts";
+import { textEncoder } from "https://deno.land/x/zcli@1.0.4/lib/text-encoder.ts";
+import { init } from "https://deno.land/x/zcli@1.0.4/mod.ts";
 
 export const app = init({
   ctx: {
@@ -12,4 +12,4 @@ export const app = init({
 
 export const { command } = app;
 export { textEncoder };
-export * from "https://deno.land/x/zcli@1.0.1/mod.ts";
+export * from "https://deno.land/x/zcli@1.0.4/mod.ts";
