@@ -1,0 +1,24 @@
+{
+  "tasks": {
+    "compile": "deno task compile:macos && deno task compile:macos-arm && deno task compile:linux && deno task compile:windows",
+    "compile:macos": "deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-apple-darwin --output bin/macos/zcli mod.ts",
+    "compile:macos-arm": "deno compile --allow-env --allow-read --allow-write --allow-net --target aarch64-apple-darwin --output bin/macos-arm/zcli mod.ts",
+    "compile:linux": "deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-unknown-linux-gnu --output bin/linux/zcli mod.ts",
+    "compile:windows": "deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-pc-windows-msvc --output bin/windows/zcli mod.ts",
+    "docs": "deno run --allow-all .scripts/generate-docs.ts",
+    "run": "deno run --allow-env --allow-read --allow-write --allow-net mod.ts",
+    "test": "deno test --allow-env --allow-read --doc",
+    "test:watch": "deno test --allow-env --allow-read --watch src",
+    "test:coverage": "deno test --allow-env --allow-read --coverage=coverage && deno coverage coverage"
+  },
+  "bench": {
+    "files": {
+      "include": ["bench"]
+    }
+  },
+  "test": {
+    "files": {
+      "include": ["test"]
+    }
+  }
+}
