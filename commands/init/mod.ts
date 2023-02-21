@@ -115,6 +115,9 @@ export const init = command("init", {
       ),
     );
 
+    // Create the `deps.ts` file.
+    files.push(Deno.writeTextFile(`${appDir}/deps.ts`, DEPS_TS));
+
     // Create the `zcli.ts` file.
     files.push(Deno.writeTextFile(`${appDir}/zcli.ts`, ZCLI_TS));
 
@@ -293,4 +296,8 @@ await zcliDoc(app, root, {
     return path.length > 1 && path.includes("help");
   },
 });
+`.trimStart();
+
+const DEPS_TS = `
+export * as path from "https://deno.land/std/path/mod.ts";
 `.trimStart();
