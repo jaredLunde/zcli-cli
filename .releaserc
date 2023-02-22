@@ -8,6 +8,51 @@
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     [
+      "@google/semantic-release-replace-plugin",
+      {
+        "replacements": [
+          {
+            "files": [
+              "zcli.ts"
+            ],
+            "from": "const VERSION = \".*\";",
+            "to": "const VERSION = \"${nextRelease.version}\";",
+            "results": [
+              {
+                "file": "zcli.ts",
+                "hasChanged": true,
+                "numMatches": 1,
+                "numReplacements": 1
+              }
+            ],
+            "countMatches": true
+          },
+          {
+            "files": [
+              "zcli.ts"
+            ],
+            "from": "const COMMIT = \".*\";",
+            "to": "const COMMIT = \"${nextRelease.gitHead}\";",
+            "results": [
+              {
+                "file": "zcli.ts",
+                "hasChanged": true,
+                "numMatches": 1,
+                "numReplacements": 1
+              }
+            ],
+            "countMatches": true
+          }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "publishCmd": "deno task compile \\\n cd bin/linux \\\n zip -r zcli-linux.zip zcli \\\n cd ../macos \\\n zip -r zcli-macos.zip zcli \\\n cd ../macos-arm \\\n zip -r zcli-macos-arm.zip zcli \\\n cd ../windows \\\n zip -r zcli-windows.zip zcli.exe"
+      }
+    ],
+    [
       "@semantic-release/github",
       {
         "assets": [
