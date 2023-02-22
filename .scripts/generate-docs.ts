@@ -6,7 +6,8 @@ await zcliDoc(app, root, {
   output: "README.md",
   title: "zCLI",
   description: `
-    A command-line tool for easily creating [zCLI](https://github.com/jaredLunde/zcli) applications and commands with Deno.
+    A command-line tool for easily creating [zCLI](https://github.com/jaredLunde/zcli) 
+    applications and commands with Deno.
 
     Get started by running \`zcli init\` to create a new zCLI application. For
     more information, see [\`zcli init\`](#-zcli-init).

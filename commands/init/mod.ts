@@ -1,6 +1,8 @@
 import { args, command, flag, flags, fmt, z } from "../../zcli.ts";
 import { path } from "../../deps.ts";
 import { AppExistsError } from "../../errors.ts";
+import { softwareLicenses } from "../../lib/software-licenses.ts";
+import { config } from "../../config.ts";
 
 export const init = command("init", {
   use: [`zcli init <name> [flags]`, `zcli init [flags]`].join("\n  "),
@@ -56,7 +58,7 @@ export const init = command("init", {
     cwd: flag({
       short: "The directory to create the zCLI application in.",
     })
-      .string().default(Deno.cwd()),
+      .string().default("Deno.cwd()"),
     short: flag({
       short: "The short description of the zCLI application.",
       aliases: ["s"],
@@ -65,40 +67,20 @@ export const init = command("init", {
     license: flag({
       short: "The license of the zCLI application.",
       aliases: ["l"],
-    }).enum([
-      "agpl3",
-      "apache",
-      "bsd2",
-      "bsd3",
-      "cc0",
-      "cc_by",
-      "cc_by_nc",
-      "cc_by_nc_sa",
-      "cc_by_nd",
-      "cc_by_sa",
-      "epl",
-      "gpl2",
-      "gpl3",
-      "isc",
-      "lgpl",
-      "mit",
-      "mpl",
-      "unilicense",
-      "wtfpl",
-      "x11",
-      "zlib",
-    ]).default("mit"),
+    }).enum(softwareLicenses).optional(),
     org: flag({
       short: "The organization of the zCLI application.",
       long: `
         The organization of the zCLI application. This will be used in the license.
       `,
       aliases: ["o"],
-    }).string().default(""),
+    }).ostring(),
   }),
 }).run(
   async function* ({ args, flags }) {
-    const cwd = path.isAbsolute(flags.cwd)
+    const cwd = flags.cwd === "Deno.cwd()"
+      ? Deno.cwd()
+      : path.isAbsolute(flags.cwd)
       ? flags.cwd
       : path.join(Deno.cwd(), flags.cwd);
     const appName = args[0] || path.basename(cwd);
@@ -207,9 +189,12 @@ export const init = command("init", {
       ),
     );
 
+    const license = flags.license || (await config.get("license"));
+    const org = flags.org ?? (await config.get("org")) ?? "";
+
     files.push(
       fetch(
-        `https://raw.githubusercontent.com/licenses/license-templates/master/templates/${flags.license}.txt`,
+        `https://raw.githubusercontent.com/licenses/license-templates/master/templates/${license}.txt`,
       ).then((res) => {
         return res.text();
       }).then((license) => {
@@ -220,7 +205,10 @@ export const init = command("init", {
             new Date().getFullYear() + "",
           )
             .replaceAll("{{ project }}", appName)
-            .replaceAll("{{ organization }}", flags.org),
+            .replaceAll(
+              "{{ organization }}",
+              org,
+            ),
         );
       }),
     );

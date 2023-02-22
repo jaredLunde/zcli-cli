@@ -39,11 +39,13 @@ export const add = command("add", {
       .string().default(""),
     cwd: flag({
       short: "The current working directory.",
-    }).string().default(Deno.cwd()),
+    }).string().default("Deno.cwd()"),
   }),
 }).run(
   async function* ({ args, flags }) {
-    const cwd = path.isAbsolute(flags.cwd)
+    const cwd = flags.cwd === "Deno.cwd()"
+      ? Deno.cwd()
+      : path.isAbsolute(flags.cwd)
       ? flags.cwd
       : path.join(Deno.cwd(), flags.cwd);
     const name = args[args.length - 1];
