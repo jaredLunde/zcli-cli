@@ -44,7 +44,7 @@ unzip -d "$bin_dir" -o "$exe.zip"
 chmod +x "$exe"
 rm "$exe.zip"
 
-echo "zCLI was installed successfully to $exe"
+echo "\nzCLI was installed successfully to $exe"
 if command -v zcli >/dev/null; then
 	echo "Run 'zcli --help' to get started"
 else
