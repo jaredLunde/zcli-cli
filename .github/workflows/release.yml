@@ -27,6 +27,6 @@ jobs:
         run: npm init -y && npm i semantic-release @google/semantic-release-replace-plugin @semantic-release/exec
 
       - name: Release
-        run: semantic-release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
