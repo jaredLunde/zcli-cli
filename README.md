@@ -39,9 +39,9 @@ Then run `zcli add <command>` to add a new command to your zCLI application.
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
 
@@ -72,18 +72,18 @@ separate the command names with a space.
 
 ### Flags
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --short, -s | `string` | No | | Add a
-short description for the command. | | --cwd | `string` | No | `"Deno.cwd()"` |
-The current working directory. |
+| Name        | Type     | Required? | Default        | Description                              |
+| ----------- | -------- | --------- | -------------- | ---------------------------------------- |
+| --short, -s | `string` | No        |                | Add a short description for the command. |
+| --cwd       | `string` | No        | `"Deno.cwd()"` | The current working directory.           |
 
 ### Global Flags
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
 
@@ -112,9 +112,9 @@ zcli config set license "mit"
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
 
@@ -136,9 +136,9 @@ The key to delete.
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
 
@@ -160,9 +160,9 @@ The key to get.
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
 
@@ -185,9 +185,9 @@ The key/value pair to set.
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
 
@@ -207,9 +207,9 @@ Show help for a zcli command
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
 
@@ -221,17 +221,17 @@ List zcli commands
 
 ### Flags
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --all, -a | `boolean` | No | | Show all
-commands, including hidden ones |
+| Name      | Type      | Required? | Default | Description                              |
+| --------- | --------- | --------- | ------- | ---------------------------------------- |
+| --all, -a | `boolean` | No        |         | Show all commands, including hidden ones |
 
 ### Global Flags
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
 
@@ -290,22 +290,20 @@ will be used.
 
 ### Flags
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --cwd | `string` | No | `"Deno.cwd()"`
-| The directory to create the zCLI application in. | | --short, -s | `string` |
-No | `"An awesome new zCLI application."` | The short description of the zCLI
-application. | | --license, -l |
-`"agpl3" \| "apache" \| "bsd2" \| "bsd3" \| "cc0" \| "cc_by" \| "cc_by_nc" \| "cc_by_nc_sa" \| "cc_by_nd" \| "cc_by_sa" \| "epl" \| "gpl2" \| "gpl3" \| "isc" \| "lgpl" \| "mit" \| "mpl" \| "unilicense" \| "wtfpl" \| "x11" \| "zlib"`
-| No | | The license of the zCLI application. | | --org, -o | `string` | No | |
-The organization of the zCLI application. This will be used in the license. |
+| Name          | Type                                                                                                                                                                                                                                     | Required? | Default                              | Description                                                                 |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------ | --------------------------------------------------------------------------- |
+| --cwd         | `string`                                                                                                                                                                                                                                 | No        | `"Deno.cwd()"`                       | The directory to create the zCLI application in.                            |
+| --short, -s   | `string`                                                                                                                                                                                                                                 | No        | `"An awesome new zCLI application."` | The short description of the zCLI application.                              |
+| --license, -l | `"agpl3" \| "apache" \| "bsd2" \| "bsd3" \| "cc0" \| "cc_by" \| "cc_by_nc" \| "cc_by_nc_sa" \| "cc_by_nd" \| "cc_by_sa" \| "epl" \| "gpl2" \| "gpl3" \| "isc" \| "lgpl" \| "mit" \| "mpl" \| "unilicense" \| "wtfpl" \| "x11" \| "zlib"` | No        |                                      | The license of the zCLI application.                                        |
+| --org, -o     | `string`                                                                                                                                                                                                                                 | No        |                                      | The organization of the zCLI application. This will be used in the license. |
 
 ### Global Flags
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
 
@@ -319,8 +317,8 @@ Shows version information command, including version number and build date.
 
 These flags are available on all commands.
 
-| Name | Type | Required? | Default | Description | | -------- | ---- |
---------- | --- | --- | ------------ | | --help, -h | `boolean` | No | | Show
-help for a command |
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
 
 [**⇗ Back to top**](#available-commands)
