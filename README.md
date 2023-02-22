@@ -4,7 +4,7 @@ A command-line tool for easily creating zCLI applications and commands with
 Deno.
 
 Get started by running `zcli init` to create a new zCLI application. For more
-information, run `zcli help init`.
+information, see [`zcli init`](#-zcli-init).
 
 Then run `zcli add <command>` to add a new command to your zCLI application.
 
@@ -54,7 +54,8 @@ To add a sub-command to an existing command, separate the command arguments with
 a space.
 
 For example, `zcli add foo bar` will create a new command called `bar` in the
-`foo` directory.
+`foo` directory. If the `foo` command does not exist, it will be created as
+well.
 
 ### Arguments
 
@@ -67,9 +68,10 @@ separate the command names with a space.
 
 ### Flags
 
-| Name        | Type     | Required? | Default | Description                              |
-| ----------- | -------- | --------- | ------- | ---------------------------------------- |
-| --short, -s | `string` | No        |         | Add a short description for the command. |
+| Name        | Type     | Required? | Default      | Description                              |
+| ----------- | -------- | --------- | ------------ | ---------------------------------------- |
+| --short, -s | `string` | No        |              | Add a short description for the command. |
+| --cwd       | `string` | No        | `Deno.cwd()` | The current working directory.           |
 
 ### Global Flags
 
@@ -138,6 +140,7 @@ create the following files:
 - `commands` - A directory for your zCLI commands.
 - `commands/mod.ts` - An auto-generated file for importing your zCLI commands.
 - `deps.ts` - A file for importing dependencies.
+- `errors.ts` - A file for defining custom errors.
 - `zcli.ts` - A file for importing zCLI.
 - `deno.jsonc` - A configuration file for Deno.
 
@@ -161,6 +164,12 @@ To compile your CLI application, run:
 deno task compile
 ```
 
+To generate documentation for your CLI application, run:
+
+```
+deno task docs
+```
+
 ### Arguments
 
 The name of the CLI application. This will be used as the name of the directory
@@ -173,10 +182,12 @@ will be used.
 
 ### Flags
 
-| Name        | Type     | Required? | Default                              | Description                                      |
-| ----------- | -------- | --------- | ------------------------------------ | ------------------------------------------------ |
-| --cwd       | `string` | No        | `Deno.cwd()`                         | The directory to create the zCLI application in. |
-| --short, -s | `string` | No        | `"An awesome new zCLI application."` | The short description of the zCLI application.   |
+| Name          | Type                                                                                                                                                                                                                                     | Required? | Default                              | Description                                                                 |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------ | --------------------------------------------------------------------------- |
+| --cwd         | `string`                                                                                                                                                                                                                                 | No        | `Deno.cwd()`                         | The directory to create the zCLI application in.                            |
+| --short, -s   | `string`                                                                                                                                                                                                                                 | No        | `"An awesome new zCLI application."` | The short description of the zCLI application.                              |
+| --license, -l | `"agpl3" \| "apache" \| "bsd2" \| "bsd3" \| "cc0" \| "cc_by" \| "cc_by_nc" \| "cc_by_nc_sa" \| "cc_by_nd" \| "cc_by_sa" \| "epl" \| "gpl2" \| "gpl3" \| "isc" \| "lgpl" \| "mit" \| "mpl" \| "unilicense" \| "wtfpl" \| "x11" \| "zlib"` | No        | `"mit"`                              | The license of the zCLI application.                                        |
+| --org, -o     | `string`                                                                                                                                                                                                                                 | No        |                                      | The organization of the zCLI application. This will be used in the license. |
 
 ### Global Flags
 

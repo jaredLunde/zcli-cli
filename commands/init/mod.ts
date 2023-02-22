@@ -1,5 +1,6 @@
-import { args, command, flag, flags, z } from "../../zcli.ts";
+import { args, command, flag, flags, fmt, z } from "../../zcli.ts";
 import { path } from "../../deps.ts";
+import { AppExistsError } from "../../errors.ts";
 
 export const init = command("init", {
   use: [`zcli init <name> [flags]`, `zcli init [flags]`].join("\n  "),
@@ -14,6 +15,7 @@ export const init = command("init", {
     - \`commands\` - A directory for your zCLI commands.
     - \`commands/mod.ts\` - An auto-generated file for importing your zCLI commands.
     - \`deps.ts\` - A file for importing dependencies.
+    - \`errors.ts\` - A file for defining custom errors.
     - \`zcli.ts\` - A file for importing zCLI.
     - \`deno.jsonc\` - A configuration file for Deno.
 
@@ -32,6 +34,11 @@ export const init = command("init", {
     To compile your CLI application, run:
     \`\`\`
     deno task compile
+    \`\`\`
+
+    To generate documentation for your CLI application, run:
+    \`\`\`
+    deno task docs
     \`\`\`
   `,
 
@@ -55,13 +62,49 @@ export const init = command("init", {
       aliases: ["s"],
     })
       .string().default("An awesome new zCLI application."),
+    license: flag({
+      short: "The license of the zCLI application.",
+      aliases: ["l"],
+    }).enum([
+      "agpl3",
+      "apache",
+      "bsd2",
+      "bsd3",
+      "cc0",
+      "cc_by",
+      "cc_by_nc",
+      "cc_by_nc_sa",
+      "cc_by_nd",
+      "cc_by_sa",
+      "epl",
+      "gpl2",
+      "gpl3",
+      "isc",
+      "lgpl",
+      "mit",
+      "mpl",
+      "unilicense",
+      "wtfpl",
+      "x11",
+      "zlib",
+    ]).default("mit"),
+    org: flag({
+      short: "The organization of the zCLI application.",
+      long: `
+        The organization of the zCLI application. This will be used in the license.
+      `,
+      aliases: ["o"],
+    }).string().default(""),
   }),
 }).run(
-  async ({ args, flags }) => {
-    const appName = args[0] || path.basename(flags.cwd);
-    const appDir = args[0] ? `${flags.cwd}/${appName}` : flags.cwd;
+  async function* ({ args, flags }) {
+    const cwd = path.isAbsolute(flags.cwd)
+      ? flags.cwd
+      : path.join(Deno.cwd(), flags.cwd);
+    const appName = args[0] || path.basename(cwd);
+    const appDir = args[0] ? `${cwd}/${appName}` : cwd;
 
-    if (appName === path.basename(flags.cwd)) {
+    if (appName === path.basename(cwd)) {
       if (
         !window.confirm(
           `Are you sure you want to create a zCLI application in this directory? (${appName})`,
@@ -75,6 +118,17 @@ export const init = command("init", {
       Deno.statSync(appDir);
     } catch (_err) {
       await Deno.mkdir(appDir, { recursive: true });
+    }
+
+    try {
+      Deno.statSync(`${appDir}/mod.ts`);
+      Deno.statSync(`${appDir}/commands`);
+      throw new AppExistsError(appName);
+    } catch (err) {
+      // Ignore
+      if (!(err instanceof Deno.errors.NotFound)) {
+        throw err;
+      }
     }
 
     await Promise.all([
@@ -93,9 +147,6 @@ export const init = command("init", {
       ),
     );
 
-    // Create the `deps.ts` file.
-    // files.push(Deno.writeTextFile(`${appDir}/deps.ts`, DEPS));
-
     // Create the `mod.ts` file.
     files.push(
       Deno.writeTextFile(
@@ -107,6 +158,14 @@ export const init = command("init", {
       ),
     );
 
+    // Create the `errors.ts` file.
+    files.push(
+      Deno.writeTextFile(
+        `${appDir}/errors.ts`,
+        ERRORS_TS.replaceAll("{{appName}}", appName),
+      ),
+    );
+
     // Create the `test/mod.test.ts` file.
     files.push(
       Deno.writeTextFile(
@@ -114,6 +173,9 @@ export const init = command("init", {
         MOD_TEST_TS.replaceAll("{{appName}}", appName),
       ),
     );
+
+    // Create the `deps.ts` file.
+    files.push(Deno.writeTextFile(`${appDir}/deps.ts`, DEPS_TS));
 
     // Create the `zcli.ts` file.
     files.push(Deno.writeTextFile(`${appDir}/zcli.ts`, ZCLI_TS));
@@ -145,7 +207,26 @@ export const init = command("init", {
       ),
     );
 
+    files.push(
+      fetch(
+        `https://raw.githubusercontent.com/licenses/license-templates/master/templates/${flags.license}.txt`,
+      ).then((res) => {
+        return res.text();
+      }).then((license) => {
+        return Deno.writeTextFile(
+          `${appDir}/LICENSE`,
+          license.replaceAll(
+            "{{ year }}",
+            new Date().getFullYear() + "",
+          )
+            .replaceAll("{{ project }}", appName)
+            .replaceAll("{{ organization }}", flags.org),
+        );
+      }),
+    );
+
     await Promise.all(files);
+    yield `✨ Created ${fmt.colors.bold(appName)} in ${appDir}`;
   },
 );
 
@@ -178,6 +259,7 @@ const DENO_JSONC = JSON.stringify(
 
 const MOD_TS = `import { app, version } from "./zcli.ts";
 import { commands } from "./commands/mod.ts";
+import { AppError } from "./errors.ts";
 
 export const root = app.command("{{appName}}", {
   short: {{short}},
@@ -189,9 +271,30 @@ export const root = app.command("{{appName}}", {
 });
 
 if (import.meta.main) {
-  root.execute();
+  try {
+    await root.execute();
+  } catch (err) {
+    // Catch known errors and exit with the appropriate code.
+    if (err instanceof AppError) {
+      console.error(err.message);
+      Deno.exit(err.code);
+    }
+    
+    throw err;
+  }
 }
 `;
+
+const ERRORS_TS = `
+export class AppError extends Error {
+  readonly code: number = 1;
+
+  constructor({ message, code }: { message: string; code?: number }) {
+    super(message);
+    this.code = code ?? 1;
+  }
+}
+`.trimStart();
 
 const MOD_TEST_TS = `
 import { describe, it } from "https://deno.land/std/testing/bdd.ts";
@@ -232,12 +335,13 @@ export const { command } = app
 export * from "https://deno.land/x/zcli/mod.ts";
 `;
 
-const COMMANDS_MOD_TS = `/**
- * This file is auto-generated by \`zcli add\`. Do not edit this file directly
- * unless you are not using \`zcli add\`.
+const COMMANDS_MOD_TS = `
+/**
+ * This variable is automatically generated by \`zcli add\`. Do not remove this 
+ * or change its name unless you're no longer using \`zcli add\`.
  */
 export const commands = [];
-`;
+`.trimStart();
 
 const README_MD = `# {{appName}}
 
@@ -277,13 +381,19 @@ deno task docs
 
 ## Credits
 
-ⓩ Created with [zCLI](https://github.com/jaredLunde/zcli-cli)
+🎨 Created with [zCLI](https://github.com/jaredLunde/zcli-cli)
 `;
 
 const GENERATE_DOCS_TS = `
 import { zcliDoc } from "https://deno.land/x/zcli/zcli-doc.ts";
 import { app } from "../zcli.ts";
 import { root } from "../mod.ts";
+
+try {
+  Deno.statSync("docs");
+} catch(_err) {
+  await Deno.mkdir("docs");
+}
 
 await zcliDoc(app, root, {
   output: "docs/{{appName}}.md",
@@ -293,4 +403,8 @@ await zcliDoc(app, root, {
     return path.length > 1 && path.includes("help");
   },
 });
+`.trimStart();
+
+const DEPS_TS = `
+export * as path from "https://deno.land/std/path/mod.ts";
 `.trimStart();

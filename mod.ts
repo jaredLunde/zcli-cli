@@ -1,5 +1,6 @@
 import { app, version } from "./zcli.ts";
 import { commands } from "./commands/mod.ts";
+import { ZcliError } from "./errors.ts";
 
 export const root = app.command("zcli", {
   short:
@@ -19,5 +20,14 @@ export const root = app.command("zcli", {
 });
 
 if (import.meta.main) {
-  root.execute();
+  try {
+    await root.execute();
+  } catch (err) {
+    if (err instanceof ZcliError) {
+      console.error(err.message);
+      Deno.exit(err.code);
+    }
+
+    throw err;
+  }
 }
