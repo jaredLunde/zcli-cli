@@ -1,12 +1,15 @@
 # zCLI
 
-A command-line tool for easily creating zCLI applications and commands with
-Deno.
+A command-line tool for easily managing
+[zCLI](https://github.com/jaredLunde/zcli) applications and commands with Deno.
 
 Get started by running `zcli init` to create a new zCLI application. For more
 information, see [`zcli init`](#-zcli-init).
 
-Then run `zcli add <command>` to add a new command to your zCLI application.
+Then run `zcli add <command>` to add a new command to your zCLI application. The
+command will be created in the `commands` directory of your zCLI application. It
+will be automatically imported and added to the `commands` array in your
+`commands/mod.ts` file. Sub-commands are supported.
 
 ## Available Commands
 
@@ -14,6 +17,10 @@ Then run `zcli add <command>` to add a new command to your zCLI application.
 | ------------------------------------------------ | --------------------------------------------------------------------------------- |
 | [**`zcli`**](#-zcli)                             | A command-line tool for easily creating zCLI applications and commands with Deno. |
 | [**`zcli add`**](#-zcli-add)                     | Add a new command to your zCLI application.                                       |
+| [**`zcli config`**](#-zcli-config)               | Manage your zCLI configuration.                                                   |
+| [**`zcli config delete`**](#-zcli-config-delete) | Delete a configuration value.                                                     |
+| [**`zcli config get`**](#-zcli-config-get)       | Get a configuration value.                                                        |
+| [**`zcli config set`**](#-zcli-config-set)       | Set a configuration value.                                                        |
 | [**`zcli help`**](#-zcli-help)                   | Show help for a zcli command                                                      |
 | [**`zcli help commands`**](#-zcli-help-commands) | List zcli commands                                                                |
 | [**`zcli init`**](#-zcli-init)                   | Create a new CLI application.                                                     |
@@ -68,10 +75,114 @@ separate the command names with a space.
 
 ### Flags
 
-| Name        | Type     | Required? | Default      | Description                              |
-| ----------- | -------- | --------- | ------------ | ---------------------------------------- |
-| --short, -s | `string` | No        |              | Add a short description for the command. |
-| --cwd       | `string` | No        | `Deno.cwd()` | The current working directory.           |
+| Name        | Type     | Required? | Default        | Description                              |
+| ----------- | -------- | --------- | -------------- | ---------------------------------------- |
+| --short, -s | `string` | No        |                | Add a short description for the command. |
+| --cwd       | `string` | No        | `"Deno.cwd()"` | The current working directory.           |
+
+### Global Flags
+
+These flags are available on all commands.
+
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
+
+[**⇗ Back to top**](#available-commands)
+
+---
+
+## `$ zcli config`
+
+This command manages your zCLI configuration. You can use it to set, get, and
+delete configuration values. Running this command without any subcommands will
+print your current configuration.
+
+Your configuration is stored in a TOML file at `~/.zcli/config.toml`.
+
+The following configuration values are available:
+
+- `license`: The default license to use when creating a new application.
+- `org`: The default organization to use when creating a new application.
+
+For example, to set the default license to MIT, run:
+
+```
+zcli config set license "mit"
+```
+
+### Global Flags
+
+These flags are available on all commands.
+
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
+
+[**⇗ Back to top**](#available-commands)
+
+---
+
+## `$ zcli config delete`
+
+Delete a configuration value.
+
+### Arguments
+
+The key to delete.
+
+| Type                 | Variadic? | Description            |
+| -------------------- | --------- | ---------------------- |
+| `"org" \| "license"` | No        | The configuration key. |
+
+### Global Flags
+
+These flags are available on all commands.
+
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
+
+[**⇗ Back to top**](#available-commands)
+
+---
+
+## `$ zcli config get`
+
+Get a configuration value.
+
+### Arguments
+
+The key to get.
+
+| Type                 | Variadic? | Description            |
+| -------------------- | --------- | ---------------------- |
+| `"org" \| "license"` | No        | The configuration key. |
+
+### Global Flags
+
+These flags are available on all commands.
+
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
+
+[**⇗ Back to top**](#available-commands)
+
+---
+
+## `$ zcli config set`
+
+Set a configuration value.
+
+### Arguments
+
+The key/value pair to set.
+
+| Type                 | Variadic? | Description                  |
+| -------------------- | --------- | ---------------------------- |
+| `"org" \| "license"` | No        | The configuration key.       |
+| `string`             | No        | The new configuration value. |
 
 ### Global Flags
 
@@ -91,9 +202,9 @@ Show help for a zcli command
 
 ### Arguments
 
-| Type                                     | Variadic? | Description                   |
-| ---------------------------------------- | --------- | ----------------------------- |
-| `"add" \| "init" \| "version" \| "help"` | No        | The command to show help for. |
+| Type                                                 | Variadic? | Description                   |
+| ---------------------------------------------------- | --------- | ----------------------------- |
+| `"add" \| "init" \| "config" \| "version" \| "help"` | No        | The command to show help for. |
 
 ### Global Flags
 
@@ -184,9 +295,9 @@ will be used.
 
 | Name          | Type                                                                                                                                                                                                                                     | Required? | Default                              | Description                                                                 |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------------------------------ | --------------------------------------------------------------------------- |
-| --cwd         | `string`                                                                                                                                                                                                                                 | No        | `Deno.cwd()`                         | The directory to create the zCLI application in.                            |
+| --cwd         | `string`                                                                                                                                                                                                                                 | No        | `"Deno.cwd()"`                       | The directory to create the zCLI application in.                            |
 | --short, -s   | `string`                                                                                                                                                                                                                                 | No        | `"An awesome new zCLI application."` | The short description of the zCLI application.                              |
-| --license, -l | `"agpl3" \| "apache" \| "bsd2" \| "bsd3" \| "cc0" \| "cc_by" \| "cc_by_nc" \| "cc_by_nc_sa" \| "cc_by_nd" \| "cc_by_sa" \| "epl" \| "gpl2" \| "gpl3" \| "isc" \| "lgpl" \| "mit" \| "mpl" \| "unilicense" \| "wtfpl" \| "x11" \| "zlib"` | No        | `"mit"`                              | The license of the zCLI application.                                        |
+| --license, -l | `"agpl3" \| "apache" \| "bsd2" \| "bsd3" \| "cc0" \| "cc_by" \| "cc_by_nc" \| "cc_by_nc_sa" \| "cc_by_nd" \| "cc_by_sa" \| "epl" \| "gpl2" \| "gpl3" \| "isc" \| "lgpl" \| "mit" \| "mpl" \| "unilicense" \| "wtfpl" \| "x11" \| "zlib"` | No        |                                      | The license of the zCLI application.                                        |
 | --org, -o     | `string`                                                                                                                                                                                                                                 | No        |                                      | The organization of the zCLI application. This will be used in the license. |
 
 ### Global Flags
