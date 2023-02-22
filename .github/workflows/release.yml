@@ -27,9 +27,11 @@ jobs:
         uses: denoland/setup-deno@v1
         with:
           deno-version: 1.x.x
-          
+
       - name: Install semantic release
-        run: npm init -y && npm i semantic-release @google/semantic-release-replace-plugin @semantic-release/exec
+        run: |
+          npm init -y 
+          npm i semantic-release @google/semantic-release-replace-plugin @semantic-release/exec
 
       - name: Release
         run: npx semantic-release
