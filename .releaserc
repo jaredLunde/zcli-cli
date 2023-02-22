@@ -50,7 +50,8 @@
     [
       "@semantic-release/exec",
       {
-        "publishCmd": "deno task compile \\\ncd bin/linux \\\nzip -r zcli-linux.zip zcli \\\ncd ../macos \\\nzip -r zcli-macos.zip zcli \\\ncd ../macos-arm \\\nzip -r zcli-macos-arm.zip zcli \\\ncd ../windows \\\nzip -r zcli-windows.zip zcli.exe \\\ncd ../.."
+        "execCwd": ".",
+        "prepareCmd": "deno task compile &&\\\ncd bin/linux &&\\\nzip -9 zcli-linux.zip zcli &&\\\ncd ../macos &&\\\nzip -9 zcli-macos.zip zcli &&\\\ncd ../macos-arm &&\\\nzip -9 zcli-macos-arm.zip zcli &&\\\ncd ../windows &&\\\nzip -9 zcli-windows.zip zcli.exe &&\\\ncd ../.."
       }
     ],
     [
