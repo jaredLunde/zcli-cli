@@ -128,9 +128,9 @@ Delete a configuration value.
 
 The key to delete.
 
-| Type                 | Variadic? | Description |
-| -------------------- | --------- | ----------- |
-| `"org" \| "license"` | No        |             |
+| Type                 | Variadic? | Description            |
+| -------------------- | --------- | ---------------------- |
+| `"org" \| "license"` | No        | The configuration key. |
 
 ### Global Flags
 
@@ -152,9 +152,9 @@ Get a configuration value.
 
 The key to get.
 
-| Type                 | Variadic? | Description |
-| -------------------- | --------- | ----------- |
-| `"org" \| "license"` | No        |             |
+| Type                 | Variadic? | Description            |
+| -------------------- | --------- | ---------------------- |
+| `"org" \| "license"` | No        | The configuration key. |
 
 ### Global Flags
 
@@ -176,10 +176,10 @@ Set a configuration value.
 
 The key/value pair to set.
 
-| Type                 | Variadic? | Description |
-| -------------------- | --------- | ----------- |
-| `"org" \| "license"` | No        |             |
-| `string`             | No        |             |
+| Type                 | Variadic? | Description                  |
+| -------------------- | --------- | ---------------------------- |
+| `"org" \| "license"` | No        | The configuration key.       |
+| `string`             | No        | The new configuration value. |
 
 ### Global Flags
 
