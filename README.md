@@ -1,9 +1,10 @@
 # zCLI
 
-A command-line tool for easily creating zCLI applications and commands with Deno.
+A command-line tool for easily creating zCLI applications and commands with
+Deno.
 
-Get started by running `zcli init` to create a new zCLI application. For
-more information, run `zcli help init`.
+Get started by running `zcli init` to create a new zCLI application. For more
+information, run `zcli help init`.
 
 Then run `zcli add <command>` to add a new command to your zCLI application.
 
@@ -22,10 +23,11 @@ Then run `zcli add <command>` to add a new command to your zCLI application.
 
 ## `$ zcli`
 
-A command-line tool for easily creating zCLI applications and commands with Deno.
+A command-line tool for easily creating zCLI applications and commands with
+Deno.
 
-Get started by running `zcli init` to create a new zCLI application. For
-more information, run `zcli help init`.
+Get started by running `zcli init` to create a new zCLI application. For more
+information, run `zcli help init`.
 
 Then run `zcli add <command>` to add a new command to your zCLI application.
 
@@ -45,17 +47,19 @@ These flags are available on all commands.
 
 Add a new command to your zCLI application.
 
-This command will create a new file in the `commands` directory of your zCLI application.
+This command will create a new file in the `commands` directory of your zCLI
+application.
 
-To add a sub-command to an existing command, separate the command arguments with a space.
+To add a sub-command to an existing command, separate the command arguments with
+a space.
 
-For example, `zcli add foo bar` will create a new command called `bar` in the `foo`
-directory.
+For example, `zcli add foo bar` will create a new command called `bar` in the
+`foo` directory.
 
 ### Arguments
 
-The name of the command to add. To add a sub-command to an existing command, separate the
-command names with a space.
+The name of the command to add. To add a sub-command to an existing command,
+separate the command names with a space.
 
 | Type     | Variadic? | Description |
 | -------- | --------- | ----------- |
