@@ -12,7 +12,7 @@ export class ZcliError extends Error {
 export class CommandExistsError extends ZcliError {
   constructor(name: string) {
     super({
-      message: `Command "${name}" already exists`,
+      message: `⛔ Command "${name}" already exists`,
       code: 1,
     });
   }
@@ -21,7 +21,7 @@ export class CommandExistsError extends ZcliError {
 export class AppExistsError extends ZcliError {
   constructor(name: string) {
     super({
-      message: `An application in "${name}" already exists`,
+      message: `⛔ An application in "${name}" already exists`,
       code: 1,
     });
   }
@@ -33,7 +33,9 @@ export class CommandsArrayNotFoundError extends ZcliError {
   ) {
     super({
       message:
-        `An array named "${fmt.colors.bold(variableName)}" must be defined in ${
+        `⛔ An array named "${
+          fmt.colors.bold(variableName)
+        }" must be defined in ${
           fmt.colors.bold(path.relative(Deno.cwd(), modulePath))
         } to use the "add" command.\n\n` +
         `For example:\nconst ${variableName} = [];`,

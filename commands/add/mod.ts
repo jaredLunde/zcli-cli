@@ -1,11 +1,12 @@
 // deno-lint-ignore-file no-explicit-any
 import { tsMorph } from "../../deps.ts";
-import { args, command, flag, flags, textEncoder, z } from "../../zcli.ts";
+import { args, command, flag, flags, fmt, textEncoder, z } from "../../zcli.ts";
 import { changeCase, path } from "../../deps.ts";
 import {
   CommandExistsError,
   CommandsArrayNotFoundError,
 } from "../../errors.ts";
+import { reservedKeywords } from "../../lib/reserved-keywords.ts";
 
 export const add = command("add", {
   short: "Add a new command to your zCLI application.",
@@ -41,12 +42,12 @@ export const add = command("add", {
     }).string().default(Deno.cwd()),
   }),
 }).run(
-  async ({ args, flags }) => {
+  async function* ({ args, flags }) {
     const cwd = path.isAbsolute(flags.cwd)
       ? flags.cwd
       : path.join(Deno.cwd(), flags.cwd);
     const name = args[args.length - 1];
-    const variableName = changeCase.camelCase(name);
+    const variableName = formatName(name);
     const cmdDir = `${cwd}/commands/${args.join("/")}`;
     const cmdPath = `${cmdDir}/mod.ts`;
 
@@ -63,16 +64,23 @@ export const add = command("add", {
     }
 
     try {
-      await putCommandModules(cmdPath, {
-        variableName,
-        short: flags.short,
-        cwd,
-      });
+      for await (
+        const line of putCommandModules(cmdPath, {
+          variableName,
+          short: flags.short,
+          cwd,
+        })
+      ) {
+        yield line;
+      }
     } catch (err) {
+      yield fmt.colors.yellow("Caught error. Rolling back changes...");
       await Deno.remove(cmdPath);
+      yield `Removed ${cmdPath}`;
 
       try {
         await Deno.remove(cmdDir);
+        yield `Removed ${cmdDir}`;
       } catch (_err) {
         // Ignore not empty error.
       }
@@ -82,10 +90,10 @@ export const add = command("add", {
   },
 );
 
-async function putCommandModules(
+async function* putCommandModules(
   commandPath: string,
   options: { variableName: string; short: string; cwd: string },
-) {
+): AsyncIterableIterator<string> {
   const commandDir = path.dirname(commandPath);
   const name = path.basename(commandDir);
 
@@ -102,14 +110,22 @@ async function putCommandModules(
     ),
   );
 
+  yield `✅ Created command ${fmt.colors.bold(name)} in ${
+    path.relative(options.cwd, commandPath)
+  }`;
+
   const isSubCommand = commandDir !== path.join(options.cwd, "commands", name);
 
   if (!isSubCommand) {
     // Update the `commands/mod.ts` file to export the new command.
-    await putCommandReferences(`${options.cwd}/commands/mod.ts`, {
-      variableName: "commands",
-      cwd: options.cwd,
-    });
+    for await (
+      const line of putCommandReferences(`${options.cwd}/commands/mod.ts`, {
+        variableName: "commands",
+        cwd: options.cwd,
+      })
+    ) {
+      yield line;
+    }
   } else {
     // Update the `commands/<parent>/mod.ts` file to export the new command.
     const parentCmdDir = path.dirname(commandDir);
@@ -118,21 +134,31 @@ async function putCommandModules(
     try {
       Deno.statSync(parentCmdPath);
     } catch (_err) {
-      await putCommandModules(parentCmdPath, {
-        variableName: changeCase.camelCase(path.basename(parentCmdDir)),
-        cwd: options.cwd,
-        short: "",
-      });
+      const variableName = formatName(path.basename(parentCmdDir));
+
+      for await (
+        const line of putCommandModules(parentCmdPath, {
+          variableName,
+          cwd: options.cwd,
+          short: "",
+        })
+      ) {
+        yield line;
+      }
     }
 
-    await putCommandReferences(parentCmdPath, {
-      variableName: "subCommands",
-      cwd: options.cwd,
-    });
+    for await (
+      const line of putCommandReferences(parentCmdPath, {
+        variableName: "subCommands",
+        cwd: options.cwd,
+      })
+    ) {
+      yield line;
+    }
   }
 }
 
-async function putCommandReferences(
+async function* putCommandReferences(
   modulePath: string,
   options: { variableName: string; cwd: string },
 ) {
@@ -166,7 +192,6 @@ async function putCommandReferences(
     )
       .getInitializerOrThrow();
   } catch (_err) {
-    console.log("not found");
     throw new CommandsArrayNotFoundError({ ...options, modulePath });
   }
 
@@ -186,7 +211,7 @@ async function putCommandReferences(
       try {
         const modPath = path.join(moduleDir, dirEntry.name, "mod.ts");
         const moduleSpecifier = `./${path.relative(moduleDir, modPath)}`;
-        const varName = changeCase.camelCase(dirEntry.name);
+        const varName = formatName(dirEntry.name);
 
         if (
           importDeclarations.find((imp) =>
@@ -216,6 +241,10 @@ async function putCommandReferences(
           )
         ) {
           commandsArray.addElement(varName, { useNewLines: true });
+
+          yield `✅ Added ${fmt.colors.bold(varName)} to ${
+            fmt.colors.bold(options.variableName)
+          } in ${path.relative(options.cwd, modulePath)}...`;
         }
       } catch (_err) {
         // Ignore
@@ -229,6 +258,16 @@ async function putCommandReferences(
     modulePath,
     textEncoder.encode(sourceFile.getFullText().trimStart()),
   );
+}
+
+function formatName(name: string) {
+  let formattedName = changeCase.camelCase(name);
+
+  if (reservedKeywords.has(formattedName)) {
+    formattedName = `${formattedName}_`;
+  }
+
+  return formattedName;
 }
 
 const COMMAND_TEMPLATE = `import { command } from "{{commandImportPath}}";
