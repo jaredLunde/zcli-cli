@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json.schemastore.org/semantic-release",
+  "branches": [
+    "main",
+    "next"
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "bin/linux/zcli-linux.zip",
+            "name": "zcli-linux.zip",
+            "label": "Download zCLI for Linux"
+          },
+          {
+            "path": "bin/macos/zcli-macos.zip",
+            "name": "zcli-macos.zip",
+            "label": "Download zCLI for macOS x64 (Intel)"
+          },
+          {
+            "path": "bin/macos-arm/zcli-macos-arm.zip",
+            "name": "zcli-macos-arm.zip",
+            "label": "Download zCLI for macOS ARM (Apple silicon, e.g. M1/M2)"
+          },
+          {
+            "path": "bin/windows/zcli-windows.zip",
+            "name": "zcli-windows.zip",
+            "label": "Download zCLI for Windows"
+          }
+        ]
+      }
+    ]
+  ]
+}

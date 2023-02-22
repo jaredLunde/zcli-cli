@@ -1,4 +1,4 @@
-import { app, version } from "./zcli.ts";
+import { app, completion, version } from "./zcli.ts";
 import { commands } from "./commands/mod.ts";
 import { ZcliError } from "./errors.ts";
 
@@ -16,6 +16,7 @@ export const root = app.command("zcli", {
   commands: [
     ...commands,
     version(app),
+    completion(app),
   ],
 });
 
