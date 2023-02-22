@@ -9,6 +9,14 @@ await zcliDoc(app, root, {
     A command-line tool for easily managing
     [zCLI](https://github.com/jaredLunde/zcli) applications and commands with Deno.
     
+    ## Installation
+    
+    \`\`\`sh
+    curl -fsSL https://raw.githubusercontent.com/jaredLunde/zcli-cli/main/install.sh | sh
+    \`\`\`
+
+    ## Getting Started
+
     Get started by running \`zcli init\` to create a new zCLI application. For more
     information, see [\`zcli init\`](#-zcli-init).
     

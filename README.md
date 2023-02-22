@@ -3,6 +3,14 @@
 A command-line tool for easily managing
 [zCLI](https://github.com/jaredLunde/zcli) applications and commands with Deno.
 
+## Installation
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/jaredLunde/zcli-cli/main/install.sh | sh
+```
+
+## Getting Started
+
 Get started by running `zcli init` to create a new zCLI application. For more
 information, see [`zcli init`](#-zcli-init).
 
@@ -13,18 +21,22 @@ will be automatically imported and added to the `commands` array in your
 
 ## Available Commands
 
-| Command                                          | Description                                                                       |
-| ------------------------------------------------ | --------------------------------------------------------------------------------- |
-| [**`zcli`**](#-zcli)                             | A command-line tool for easily creating zCLI applications and commands with Deno. |
-| [**`zcli add`**](#-zcli-add)                     | Add a new command to your zCLI application.                                       |
-| [**`zcli config`**](#-zcli-config)               | Manage your zCLI configuration.                                                   |
-| [**`zcli config delete`**](#-zcli-config-delete) | Delete a configuration value.                                                     |
-| [**`zcli config get`**](#-zcli-config-get)       | Get a configuration value.                                                        |
-| [**`zcli config set`**](#-zcli-config-set)       | Set a configuration value.                                                        |
-| [**`zcli help`**](#-zcli-help)                   | Show help for a zcli command                                                      |
-| [**`zcli help commands`**](#-zcli-help-commands) | List zcli commands                                                                |
-| [**`zcli init`**](#-zcli-init)                   | Create a new CLI application.                                                     |
-| [**`zcli version`**](#-zcli-version)             | Show version information                                                          |
+| Command                                              | Description                                                                       |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [**`zcli`**](#-zcli)                                 | A command-line tool for easily creating zCLI applications and commands with Deno. |
+| [**`zcli add`**](#-zcli-add)                         | Add a new command to your zCLI application.                                       |
+| [**`zcli completion`**](#-zcli-completion)           | Generate an autocompletion script for the specified shell                         |
+| [**`zcli completion bash`**](#-zcli-completion-bash) | Generate an autocompletion script for the bash shell                              |
+| [**`zcli completion fish`**](#-zcli-completion-fish) | Generate an autocompletion script for the fish shell                              |
+| [**`zcli completion zsh`**](#-zcli-completion-zsh)   | Generate an autocompletion script for the zsh shell                               |
+| [**`zcli config`**](#-zcli-config)                   | Manage your zCLI configuration.                                                   |
+| [**`zcli config delete`**](#-zcli-config-delete)     | Delete a configuration value.                                                     |
+| [**`zcli config get`**](#-zcli-config-get)           | Get a configuration value.                                                        |
+| [**`zcli config set`**](#-zcli-config-set)           | Set a configuration value.                                                        |
+| [**`zcli help`**](#-zcli-help)                       | Show help for a zcli command                                                      |
+| [**`zcli help commands`**](#-zcli-help-commands)     | List zcli commands                                                                |
+| [**`zcli init`**](#-zcli-init)                       | Create a new CLI application.                                                     |
+| [**`zcli version`**](#-zcli-version)                 | Show version information                                                          |
 
 ---
 
@@ -79,6 +91,151 @@ separate the command names with a space.
 | ----------- | -------- | --------- | -------------- | ---------------------------------------- |
 | --short, -s | `string` | No        |                | Add a short description for the command. |
 | --cwd       | `string` | No        | `"Deno.cwd()"` | The current working directory.           |
+
+### Global Flags
+
+These flags are available on all commands.
+
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
+
+[**⇗ Back to top**](#available-commands)
+
+---
+
+## `$ zcli completion`
+
+Generate an autocompletion script for zcli.json in the specified shell. See each
+sub-command's help for details on how to use the generated script.
+
+### Global Flags
+
+These flags are available on all commands.
+
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
+
+[**⇗ Back to top**](#available-commands)
+
+---
+
+## `$ zcli completion bash`
+
+Generate the autocompletion script for the bash shell.
+
+This script depends on the `bash-completion` package. If it is not installed
+already, you can install it via your OS's package manager.
+
+To load completions in your current shell session:
+
+```
+$ source <(zcli.json completion bash)
+```
+
+To load completions for every new session, execute once:
+
+Linux:
+
+```
+$ zcli.json completion bash > /etc/bash_completion.d/zcli.json
+```
+
+MacOS:
+
+```
+$ zcli.json completion bash > /usr/local/etc/bash_completion.d/zcli.json
+```
+
+You will need to start a new shell for this setup to take effect.
+
+### Global Flags
+
+These flags are available on all commands.
+
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
+
+[**⇗ Back to top**](#available-commands)
+
+---
+
+## `$ zcli completion fish`
+
+Generate the autocompletion script for the fish shell.
+
+To load completions in your current shell session:
+
+```
+$ zcli.json completion fish | source
+```
+
+To load completions for every new session, execute once:
+
+```
+$ zcli.json completion fish > ~/.config/fish/completions/zcli.json.fish
+```
+
+You will need to start a new shell for this setup to take effect.
+
+### Flags
+
+| Name              | Type      | Required? | Default | Description                     |
+| ----------------- | --------- | --------- | ------- | ------------------------------- |
+| --no-descriptions | `boolean` | No        |         | Disable completion descriptions |
+
+### Global Flags
+
+These flags are available on all commands.
+
+| Name       | Type      | Required? | Default | Description             |
+| ---------- | --------- | --------- | ------- | ----------------------- |
+| --help, -h | `boolean` | No        |         | Show help for a command |
+
+[**⇗ Back to top**](#available-commands)
+
+---
+
+## `$ zcli completion zsh`
+
+Generate the autocompletion script for the zsh shell.
+
+If shell completion is not already enabled in your environment you will need to
+enable it. You can execute the following once:
+
+```
+$ echo "autoload -U compinit; compinit" >> ~/.zshrc
+```
+
+To load completions for every new session, execute once:
+
+Linux:
+
+```
+$ zcli.json completion zsh > "${fpath[1]}/_zcli.json"
+```
+
+macOS:
+
+```
+$ zcli.json completion zsh > /usr/local/share/zsh/site-functions/_zcli.json
+```
+
+Oh My Zsh:
+
+```
+$ zcli.json completion zsh > ~/.oh-my-zsh/completions/_zcli.json
+```
+
+You will need to start a new shell for this setup to take effect.
+
+### Flags
+
+| Name              | Type      | Required? | Default | Description                     |
+| ----------------- | --------- | --------- | ------- | ------------------------------- |
+| --no-descriptions | `boolean` | No        |         | Disable completion descriptions |
 
 ### Global Flags
 
@@ -202,9 +359,9 @@ Show help for a zcli command
 
 ### Arguments
 
-| Type                                                 | Variadic? | Description                   |
-| ---------------------------------------------------- | --------- | ----------------------------- |
-| `"add" \| "init" \| "config" \| "version" \| "help"` | No        | The command to show help for. |
+| Type                                                                 | Variadic? | Description                   |
+| -------------------------------------------------------------------- | --------- | ----------------------------- |
+| `"add" \| "init" \| "config" \| "version" \| "completion" \| "help"` | No        | The command to show help for. |
 
 ### Global Flags
 
