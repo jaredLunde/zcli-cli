@@ -15,6 +15,7 @@ export const init = command("init", {
     - \`commands\` - A directory for your zCLI commands.
     - \`commands/mod.ts\` - An auto-generated file for importing your zCLI commands.
     - \`deps.ts\` - A file for importing dependencies.
+    - \`errors.ts\` - A file for defining custom errors.
     - \`zcli.ts\` - A file for importing zCLI.
     - \`deno.jsonc\` - A configuration file for Deno.
 
@@ -33,6 +34,11 @@ export const init = command("init", {
     To compile your CLI application, run:
     \`\`\`
     deno task compile
+    \`\`\`
+
+    To generate documentation for your CLI application, run:
+    \`\`\`
+    deno task docs
     \`\`\`
   `,
 
@@ -56,6 +62,39 @@ export const init = command("init", {
       aliases: ["s"],
     })
       .string().default("An awesome new zCLI application."),
+    license: flag({
+      short: "The license of the zCLI application.",
+      aliases: ["l"],
+    }).enum([
+      "agpl3",
+      "apache",
+      "bsd2",
+      "bsd3",
+      "cc0",
+      "cc_by",
+      "cc_by_nc",
+      "cc_by_nc_sa",
+      "cc_by_nd",
+      "cc_by_sa",
+      "epl",
+      "gpl2",
+      "gpl3",
+      "isc",
+      "lgpl",
+      "mit",
+      "mpl",
+      "unilicense",
+      "wtfpl",
+      "x11",
+      "zlib",
+    ]).default("mit"),
+    org: flag({
+      short: "The organization of the zCLI application.",
+      long: `
+        The organization of the zCLI application. This will be used in the license.
+      `,
+      aliases: ["o"],
+    }).string().default(""),
   }),
 }).run(
   async ({ args, flags }) => {
@@ -166,6 +205,24 @@ export const init = command("init", {
           JSON.stringify(flags.short),
         ),
       ),
+    );
+
+    files.push(
+      fetch(
+        `https://raw.githubusercontent.com/licenses/license-templates/master/templates/${flags.license}.txt`,
+      ).then((res) => {
+        return res.text();
+      }).then((license) => {
+        return Deno.writeTextFile(
+          `${appDir}/LICENSE`,
+          license.replaceAll(
+            "{{ year }}",
+            new Date().getFullYear() + "",
+          )
+            .replaceAll("{{ project }}", appName)
+            .replaceAll("{{ organization }}", flags.org),
+        );
+      }),
     );
 
     await Promise.all(files);
