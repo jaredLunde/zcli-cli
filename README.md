@@ -106,7 +106,7 @@ These flags are available on all commands.
 
 ## `$ zcli completion`
 
-Generate an autocompletion script for zcli.json in the specified shell. See each
+Generate an autocompletion script for zcli in the specified shell. See each
 sub-command's help for details on how to use the generated script.
 
 ### Global Flags
@@ -131,7 +131,7 @@ already, you can install it via your OS's package manager.
 To load completions in your current shell session:
 
 ```
-$ source <(zcli.json completion bash)
+$ source <(zcli completion bash)
 ```
 
 To load completions for every new session, execute once:
@@ -139,13 +139,13 @@ To load completions for every new session, execute once:
 Linux:
 
 ```
-$ zcli.json completion bash > /etc/bash_completion.d/zcli.json
+$ zcli completion bash > /etc/bash_completion.d/zcli
 ```
 
 MacOS:
 
 ```
-$ zcli.json completion bash > /usr/local/etc/bash_completion.d/zcli.json
+$ zcli completion bash > /usr/local/etc/bash_completion.d/zcli
 ```
 
 You will need to start a new shell for this setup to take effect.
@@ -169,13 +169,13 @@ Generate the autocompletion script for the fish shell.
 To load completions in your current shell session:
 
 ```
-$ zcli.json completion fish | source
+$ zcli completion fish | source
 ```
 
 To load completions for every new session, execute once:
 
 ```
-$ zcli.json completion fish > ~/.config/fish/completions/zcli.json.fish
+$ zcli completion fish > ~/.config/fish/completions/zcli.fish
 ```
 
 You will need to start a new shell for this setup to take effect.
@@ -214,19 +214,19 @@ To load completions for every new session, execute once:
 Linux:
 
 ```
-$ zcli.json completion zsh > "${fpath[1]}/_zcli.json"
+$ zcli completion zsh > "${fpath[1]}/_zcli"
 ```
 
 macOS:
 
 ```
-$ zcli.json completion zsh > /usr/local/share/zsh/site-functions/_zcli.json
+$ zcli completion zsh > /usr/local/share/zsh/site-functions/_zcli
 ```
 
 Oh My Zsh:
 
 ```
-$ zcli.json completion zsh > ~/.oh-my-zsh/completions/_zcli.json
+$ zcli completion zsh > ~/.oh-my-zsh/completions/_zcli
 ```
 
 You will need to start a new shell for this setup to take effect.
