@@ -14,9 +14,9 @@ curl -fsSL https://raw.githubusercontent.com/jaredLunde/zcli-cli/main/install.sh
 Get started by running `zcli init` to create a new zCLI application. For more
 information, see [`zcli init`](#-zcli-init).
 
-Then run `zcli add <command>` to add a new command to your zCLI application.
-The command will be created in the `commands` directory of your zCLI application.
-It will be automatically imported and added to the `commands` array in your
+Then run `zcli add <command>` to add a new command to your zCLI application. The
+command will be created in the `commands` directory of your zCLI application. It
+will be automatically imported and added to the `commands` array in your
 `commands/mod.ts` file. Sub-commands are supported.
 
 ## Available Commands
@@ -42,10 +42,11 @@ It will be automatically imported and added to the `commands` array in your
 
 ## `$ zcli`
 
-A command-line tool for easily creating zCLI applications and commands with Deno.
+A command-line tool for easily creating zCLI applications and commands with
+Deno.
 
-Get started by running `zcli init` to create a new zCLI application. For
-more information, run `zcli help init`.
+Get started by running `zcli init` to create a new zCLI application. For more
+information, run `zcli help init`.
 
 Then run `zcli add <command>` to add a new command to your zCLI application.
 
@@ -65,17 +66,20 @@ These flags are available on all commands.
 
 Add a new command to your zCLI application.
 
-This command will create a new file in the `commands` directory of your zCLI application.
+This command will create a new file in the `commands` directory of your zCLI
+application.
 
-To add a sub-command to an existing command, separate the command arguments with a space.
+To add a sub-command to an existing command, separate the command arguments with
+a space.
 
-For example, `zcli add foo bar` will create a new command called `bar` in the `foo`
-directory. If the `foo` command does not exist, it will be created as well.
+For example, `zcli add foo bar` will create a new command called `bar` in the
+`foo` directory. If the `foo` command does not exist, it will be created as
+well.
 
 ### Arguments
 
-The name of the command to add. To add a sub-command to an existing command, separate the
-command names with a space.
+The name of the command to add. To add a sub-command to an existing command,
+separate the command names with a space.
 
 | Type     | Variadic? | Description |
 | -------- | --------- | ----------- |
@@ -102,8 +106,8 @@ These flags are available on all commands.
 
 ## `$ zcli completion`
 
-Generate an autocompletion script for zcli.json in the specified shell.
-See each sub-command's help for details on how to use the generated script.
+Generate an autocompletion script for zcli.json in the specified shell. See each
+sub-command's help for details on how to use the generated script.
 
 ### Global Flags
 
@@ -121,8 +125,8 @@ These flags are available on all commands.
 
 Generate the autocompletion script for the bash shell.
 
-This script depends on the `bash-completion` package.
-If it is not installed already, you can install it via your OS's package manager.
+This script depends on the `bash-completion` package. If it is not installed
+already, you can install it via your OS's package manager.
 
 To load completions in your current shell session:
 
@@ -198,8 +202,8 @@ These flags are available on all commands.
 
 Generate the autocompletion script for the zsh shell.
 
-If shell completion is not already enabled in your environment you will need
-to enable it. You can execute the following once:
+If shell completion is not already enabled in your environment you will need to
+enable it. You can execute the following once:
 
 ```
 $ echo "autoload -U compinit; compinit" >> ~/.zshrc
