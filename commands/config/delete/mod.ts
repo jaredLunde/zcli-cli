@@ -12,7 +12,7 @@ export const delete_ = command("delete", {
   commands: subCommands,
   args: args({
     short: "The key to delete.",
-  }).tuple([z.enum(configPaths)]),
+  }).tuple([z.enum(configPaths).describe("The configuration key.")]),
 }).run(
   async function* ({ args }) {
     const [key] = args;

@@ -12,7 +12,7 @@ export const get = command("get", {
   commands: subCommands,
   args: args({
     short: "The key to get.",
-  }).tuple([z.enum(configPaths)]),
+  }).tuple([z.enum(configPaths).describe("The configuration key.")]),
 }).run(
   async function* ({ args }) {
     const [key] = args;

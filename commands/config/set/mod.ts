@@ -13,7 +13,10 @@ export const set = command("set", {
   commands: subCommands,
   args: args({
     short: "The key/value pair to set.",
-  }).tuple([z.enum(configPaths), z.string()]),
+  }).tuple([
+    z.enum(configPaths).describe("The configuration key."),
+    z.string().describe("The new configuration value."),
+  ]),
 }).run(
   async function* ({ args }) {
     const [key, value] = args;
