@@ -24,7 +24,7 @@ jobs:
           node-version: 18.x.x
       
       - name: Install semantic release
-        run: npm i -G semantic-release @google/semantic-release-replace-plugin @semantic-release/exec
+        run: npm init -y && npm i semantic-release @google/semantic-release-replace-plugin @semantic-release/exec
 
       - name: Release
         run: semantic-release
