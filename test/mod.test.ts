@@ -1,7 +1,7 @@
-import { describe, it } from "https://deno.land/std@0.177.0/testing/bdd.ts";
-import { assertSpyCalls } from "https://deno.land/std@0.177.0/testing/mock.ts";
-import { stub } from "https://deno.land/std@0.177.0/testing/mock.ts";
-import { assert } from "https://deno.land/std@0.177.0/testing/asserts.ts";
+import { describe, it } from "https://deno.land/std@0.178.0/testing/bdd.ts";
+import { assertSpyCalls } from "https://deno.land/std@0.178.0/testing/mock.ts";
+import { stub } from "https://deno.land/std@0.178.0/testing/mock.ts";
+import { assert } from "https://deno.land/std@0.178.0/testing/asserts.ts";
 import { root } from "../mod.ts";
 
 describe("zcli", () => {
