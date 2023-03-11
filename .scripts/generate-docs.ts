@@ -1,4 +1,4 @@
-import { zcliDoc } from "https://deno.land/x/zcli@1.3.2/zcli-doc.ts";
+import { zcliDoc } from "https://deno.land/x/zcli@1.3.3/zcli-doc.ts";
 import { app } from "../zcli.ts";
 import { root } from "../mod.ts";
 
