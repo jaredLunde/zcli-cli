@@ -142,7 +142,7 @@ Linux:
 $ zcli completion bash > /etc/bash_completion.d/zcli
 ```
 
-MacOS:
+macOS:
 
 ```
 $ zcli completion bash > /usr/local/etc/bash_completion.d/zcli
@@ -378,6 +378,12 @@ These flags are available on all commands.
 ## `$ zcli help commands`
 
 List zcli commands
+
+Example:
+
+```
+$ zcli help commands
+```
 
 ### Flags
 
